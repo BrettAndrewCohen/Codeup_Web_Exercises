@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>If Else JS</title>
+</head>
+<body>
+    <script>
+		// ignore these lines for now
+		// just know that the variable 'color' will end up with a random value from the colors array
+		var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+		var color = colors[Math.floor(Math.random()*colors.length)];
+
+		var favorite = 'green'; // todo, change this to your favorite color from the list
+
+		// if (favorite == 'blue') {
+		// 	console.log('The color is blue! Blue is the color of the ocean');
+		// } else if (favorite == 'red') {
+		// 	console.log('The color is red! Red is the color of the sun');
+		// } else if (favorite == 'orange') {
+		// 	console.log('The color is orange! Orange is the color of of an orange');
+		// } else if (favorite == 'yellow') {
+		// 	console.log('The color is yellow! Yellow is the color of the sun');
+		// } else if (favorite == 'green') {
+		// 	console.log('The color is green! Green is the color of grass');
+		// } else {
+		// 	console.log('I do not know anything about that color');
+		// }
+
+		switch(color) {
+			case "blue":
+				console.log('The color is blue! Blue is the color of the ocean');
+				break;
+			case "red":
+				console.log('The color is red! Red is the color of the sun');
+				break;
+			case "orange":
+				console.log('The color is orange! Orange is the color of of an orange');
+				break;
+			case "yellow":
+				console.log('The color is yellow! Yellow is the color of the sun');
+				break;
+			case "green":
+				console.log('The color is green! Green is the color of grass');
+				break;
+			default:
+				console.log('I do not know anything about that color');
+
+		}
+
+		var message = (favorite == 'blue') ? "That's my favorite color!" : "That's NOT my favorite color";
+		console.log(message);
+
+	</script>
+</body>
+</html>
