@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>External JS</title>
+</head>
+<body>
+    <script>
+    // todo: Ask the user for their name.
+//       Keep asking if an empty input is provided.
+var username = prompt('What is your name?');
+
+while (username == "" || username == null) {
+    var username = prompt('What is your name?');
+}
+
+// todo: Show an alert message that welcomes the user based on their input.
+
+alert("Welcome " + username);
+
+var confirmed = confirm(username + ', do you like pizza?');
+
+if (confirmed) {
+    alert("I love pizza too!");
+} else {
+    alert("How do you not live pizza?");
+}
+// todo: Ask the user if they like pizza.
+//       Based on their answer tell show a creative alert message.
+    </script>
+</body>
+</html>

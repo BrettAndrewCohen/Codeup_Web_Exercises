@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>External JS</title>
+</head>
+<body>
+    <script>
+    var number = Math.floor((Math.random()*50)+1);
+    while (!(number % 2)) {
+    	number = Math.floor((Math.random()*50)+1);
+    }
+    console.log(number);
+
+    for (var i = 1; i <= 50; i += 2) {
+    	if (i == number) {
+    		console.log("I skipped number " + number);
+    		continue;
+    	}
+    	console.log(i);
+    }
+
+
+    </script>
+</body>
+</html>
