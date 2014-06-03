@@ -2,18 +2,9 @@
 
 function savefile($savefilepath, $array) {
     $filename = $savefilepath;
-    if (!empty($array)) {
-        if (!empty($array['name']) && !empty($array['address']) && !empty($array['city']) && !empty($array['state']) && !empty($array['zip'])) {
-            foreach ($_POST as $key => $value) {
-                echo "<li>The users $key is $value.</li>";
-            }
-            $handle = fopen($filename, 'w');
-            fputcsv($handle, $array);
-            fclose($handle); 
-        } else {
-            echo "Please include all of the fields";
-        }
-    }   
+    $handle = fopen($filename, 'w');
+    fputcsv($handle, $array);
+    fclose($handle); 
 }
 
 ?>
@@ -25,11 +16,25 @@ function savefile($savefilepath, $array) {
 </head>
 <body>
 <h1>Address Book</h1>
-<ul>
-<?  if (!empty($_POST)):?>
-<?   savefile('address_book.csv', $_POST);?>
-<?  endif;?>
-</ul>
+<table border="1" style="width:500px">
+    <tr>
+        <td>Name</td>
+        <td>Address</td>
+        <td>City</td>
+        <td>State</td>
+        <td>Zip</td>
+    </tr>
+<? if (!empty($_POST)) {
+    if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['city']) && !empty($_POST['state']) && !empty($_POST['zip'])) {
+        foreach ($_POST as $key => $value) {
+            echo "<td>$value</td>";
+        } 
+    savefile('address_book.csv', $_POST);
+    } else {
+        echo "Please include all of the fields";
+    }
+} ?>
+</table>
 <h1>Please add your information:</h1>
 <form method="POST" action="/address_book.php">
     <p>
