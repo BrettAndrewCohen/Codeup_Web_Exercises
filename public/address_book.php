@@ -1,10 +1,48 @@
 <?php
 
+$filename = 'address_book.csv';
+
 function savefile($savefilepath, $array) {
     $filename = $savefilepath;
     $handle = fopen($filename, 'w');
-    fputcsv($handle, $array);
+    foreach ($array as $row) {
+        fputcsv($handle, $row);
+    }
     fclose($handle); 
+}
+
+function readcsv($filename) {
+    $contents = [];
+    if (is_readable($filename) && filesize($filename) > 0){
+        $handle = fopen($filename, 'r');
+        while(!feof($handle)) {
+            $row = fgetcsv($handle);
+            if (is_array($row)) {
+            $contents[] = $row;
+            }
+        }
+        fclose($handle);
+    }
+    return $contents;
+} 
+
+$address_book = readcsv($filename);
+
+if (!empty($_POST)) {
+    if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['city']) && !empty($_POST['state']) && !empty($_POST['zip'])) {
+        $newEntry = array($_POST['name'],$_POST['address'],$_POST['city'],$_POST['state'],$_POST['zip']);
+        // $address_book[] = $newEntry; same as below
+        array_push($address_book, $newEntry);
+        savefile('address_book.csv', $address_book);
+    } else {
+       echo "Please include all of the fields";
+    }
+}
+
+if (!empty($_GET)) {
+    $removeindex = $_GET['removeitem'];
+    unset($address_book[$removeindex]);
+    savefile('address_book.csv', $address_book);
 }
 
 ?>
@@ -16,24 +54,23 @@ function savefile($savefilepath, $array) {
 </head>
 <body>
 <h1>Address Book</h1>
-<table border="1" style="width:500px">
+<table border="1" style="width:700px">
     <tr>
         <td>Name</td>
         <td>Address</td>
         <td>City</td>
         <td>State</td>
         <td>Zip</td>
+        <td>Remove Contact?</td>
     </tr>
-<? if (!empty($_POST)) {
-    if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['city']) && !empty($_POST['state']) && !empty($_POST['zip'])) {
-        foreach ($_POST as $key => $value) {
-            echo "<td>$value</td>";
-        } 
-    savefile('address_book.csv', $_POST);
-    } else {
-        echo "Please include all of the fields";
-    }
-} ?>
+<? foreach ($address_book as $index => $entry) : ?>
+<tr>
+    <? foreach ($entry as $value) : ?>
+        <td><?= $value;?></td>
+        <?endforeach;?>
+<?= "<td><a href='?removeitem=$index'>Remove Contact</a></td>";?>
+<? endforeach;?>
+</tr>
 </table>
 <h1>Please add your information:</h1>
 <form method="POST" action="/address_book.php">
