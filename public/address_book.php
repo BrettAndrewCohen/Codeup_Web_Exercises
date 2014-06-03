@@ -1,18 +1,19 @@
 <?php
 
-$uslessArray = [];
-
 function savefile($savefilepath, $array) {
     $filename = $savefilepath;
-    if (is_writable($filename)) {
-        $handle = fopen($filename, 'w');
-        fputcsv($handle, $array);
-        fclose($handle); 
+    if (!empty($array)) {
+        if (!empty($array['name']) && !empty($array['address']) && !empty($array['city']) && !empty($array['state']) && !empty($array['zip'])) {
+            foreach ($_POST as $key => $value) {
+                echo "<li>The users $key is $value.</li>";
+            }
+            $handle = fopen($filename, 'w');
+            fputcsv($handle, $array);
+            fclose($handle); 
+        } else {
+            echo "Please include all of the fields";
+        }
     }   
-}
-
-if (!empty($_POST)) {
-    savefile('address_book.csv', $_POST);
 }
 
 ?>
@@ -23,17 +24,12 @@ if (!empty($_POST)) {
     <title>Address Book Entries</title>
 </head>
 <body>
-<h1>Address Book Entry</h1>
-<? if (!empty($_POST)) : ?>
-    <? if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['city']) && !empty($_POST['state']) && !empty($_POST['zip'])) : ?>
-        <? foreach ($_POST as $key => $value) :?>
-            <?="<li>The users $key is $value.</li>"?>
-        <? endforeach; ?>
-    <? else : ?>
-        <?="Please include all of the fields"?>
-    <? endif; ?>
-<? endif; ?>
-
+<h1>Address Book</h1>
+<ul>
+<?  if (!empty($_POST)):?>
+<?   savefile('address_book.csv', $_POST);?>
+<?  endif;?>
+</ul>
 <h1>Please add your information:</h1>
 <form method="POST" action="/address_book.php">
     <p>
