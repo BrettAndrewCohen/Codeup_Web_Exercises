@@ -1,39 +1,73 @@
 <?php
 
-$filename = 'address_book.csv';
+// $filename = 'address_book.csv';
 
-function savefile($savefilepath, $array) {
-    $filename = $savefilepath;
-    $handle = fopen($filename, 'w');
-    foreach ($array as $row) {
-        fputcsv($handle, $row);
+class AddressDataStore {
+
+    public $filename = 'address_book.csv';
+
+    function readcsv(){
+        $contents = [];
+        if (is_readable($this->filename) && filesize($this->filename) > 0){
+            $handle = fopen($this->filename, 'r');
+            while(!feof($handle)) {
+                $row = fgetcsv($handle);
+                if (is_array($row)) {
+                $contents[] = $row;
+                }
+            }
+            fclose($handle);
+        }
+        return $contents;
     }
-    fclose($handle); 
+
+    function savefile($addresses_array) {
+        $handle = fopen($this->filename, 'w');
+        foreach ($addresses_array as $row) {
+        fputcsv($handle, $row);
+        }
+        fclose($handle); 
+    }
+
 }
 
-function readcsv($filename) {
-    $contents = [];
-    if (is_readable($filename) && filesize($filename) > 0){
-        $handle = fopen($filename, 'r');
-        while(!feof($handle)) {
-            $row = fgetcsv($handle);
-            if (is_array($row)) {
-            $contents[] = $row;
-            }
-        }
-        fclose($handle);
-    }
-    return $contents;
-} 
+// function savefile($filename, $array) {
+//     // $filename = $savefilepath;
+//     $handle = fopen($filename, 'w');
+//     foreach ($array as $row) {
+//         fputcsv($handle, $row);
+//     }
+//     fclose($handle); 
+// }
 
-$address_book = readcsv($filename);
+// function readcsv($filename) {
+//     $contents = [];
+//     if (is_readable($filename) && filesize($filename) > 0){
+//         $handle = fopen($filename, 'r');
+//         while(!feof($handle)) {
+//             $row = fgetcsv($handle);
+//             if (is_array($row)) {
+//             $contents[] = $row;
+//             }
+//         }
+//         fclose($handle);
+//     }
+//     return $contents;
+// } 
+
+$ads = new AddressDataStore();
+
+$address_book = $ads->readcsv();
+
+// $address_book = readcsv($filename);
 
 if (!empty($_POST)) {
     if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['city']) && !empty($_POST['state']) && !empty($_POST['zip'])) {
         $newEntry = array($_POST['name'],$_POST['address'],$_POST['city'],$_POST['state'],$_POST['zip']);
         // $address_book[] = $newEntry; same as below
         array_push($address_book, $newEntry);
-        savefile('address_book.csv', $address_book);
+        $ads->savefile($address_book);
+        // savefile('address_book.csv', $address_book);
     } else {
        echo "Please include all of the fields";
     }
@@ -42,7 +76,8 @@ if (!empty($_POST)) {
 if (!empty($_GET)) {
     $removeindex = $_GET['removeitem'];
     unset($address_book[$removeindex]);
-    savefile('address_book.csv', $address_book);
+    $ads->savefile($address_book);
+    // savefile('address_book.csv', $address_book);
 }
 
 ?>
