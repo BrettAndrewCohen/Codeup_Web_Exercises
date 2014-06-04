@@ -2,35 +2,6 @@
 
 // $filename = 'address_book.csv';
 
-class AddressDataStore {
-
-    public $filename = 'address_book.csv';
-
-    function readcsv(){
-        $contents = [];
-        if (is_readable($this->filename) && filesize($this->filename) > 0){
-            $handle = fopen($this->filename, 'r');
-            while(!feof($handle)) {
-                $row = fgetcsv($handle);
-                if (is_array($row)) {
-                $contents[] = $row;
-                }
-            }
-            fclose($handle);
-        }
-        return $contents;
-    }
-
-    function savefile($addresses_array) {
-        $handle = fopen($this->filename, 'w');
-        foreach ($addresses_array as $row) {
-        fputcsv($handle, $row);
-        }
-        fclose($handle); 
-    }
-
-}
-
 // function savefile($filename, $array) {
 //     // $filename = $savefilepath;
 //     $handle = fopen($filename, 'w');
@@ -55,8 +26,45 @@ class AddressDataStore {
 //     return $contents;
 // } 
 
-$ads = new AddressDataStore();
+include('classes/address_data_store.php');
 
+// class AddressDataStore {
+
+//     // public $filename = 'address_book.csv';
+//     public $filename = '';
+
+//     function __construct($nameOfFile)
+//     {
+//         $this->filename = $nameOfFile;
+//     }
+
+//     function readcsv(){
+//         $contents = [];
+//         if (is_readable($this->filename) && filesize($this->filename) > 0){
+//             $handle = fopen($this->filename, 'r');
+//             while(!feof($handle)) {
+//                 $row = fgetcsv($handle);
+//                 if (is_array($row)) {
+//                 $contents[] = $row;
+//                 }
+//             }
+//             fclose($handle);
+//         }
+//         return $contents;
+//     }
+
+//     function savefile($addresses_array) {
+//         $handle = fopen($this->filename, 'w');
+//         foreach ($addresses_array as $row) {
+//             fputcsv($handle, $row);
+//         }
+//         fclose($handle); 
+//     }
+
+// }
+
+$ads = new AddressDataStore('address_book.csv');
+// $ads->filename = 'address_book.csv';
 $address_book = $ads->readcsv();
 
 // $address_book = readcsv($filename);
@@ -80,6 +88,28 @@ if (!empty($_GET)) {
     // savefile('address_book.csv', $address_book);
 }
 
+if (count($_FILES) > 0 && $_FILES['file1']['error'] == 0) {
+
+    if ($_FILES['file1']['type'] == 'text/csv') {
+        // Set the destination directory for uploads
+        $upload_dir = '/vagrant/sites/codeup.dev/public/uploads/';
+        // Grab the filename from the uploaded file by using basename
+        $filename = basename($_FILES['file1']['name']);
+        // Create the saved filename using the file's original name and our upload directory
+        $saved_filename = $upload_dir . $filename;
+        // Move the file from the temp location to our uploads directory
+        move_uploaded_file($_FILES['file1']['tmp_name'], $saved_filename);
+
+        $upload = new AddressDataStore($saved_filename);
+        $csvfile = $upload->readcsv();
+        $address_book = array_merge($address_book, $csvfile);
+        $ads->savefile($address_book);
+
+    } else {
+        echo "Not a valid file. Please use only a CSV file";
+    }
+}
+// var_dump($address_book);
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,10 +132,11 @@ if (!empty($_GET)) {
 <tr>
     <? foreach ($entry as $value) : ?>
         <td><?= $value;?></td>
-        <?endforeach;?>
+    <?endforeach;?>
 <?= "<td><a href='?removeitem=$index'>Remove Contact</a></td>";?>
-<? endforeach;?>
 </tr>
+<? endforeach;?>
+
 </table>
 <h1>Please add your information:</h1>
 <form method="POST" action="/address_book.php">
@@ -130,6 +161,18 @@ if (!empty($_GET)) {
         <input id="zip" name="zip" type="text" placeholder="Enter Your Zip">
     </p>
         <input type="submit" value="Submit">
+    </p>
+</form>
+
+<h1>Upload File</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <p>
+        <label for="file1">File to upload: </label>
+        <input type="file" id="file1" name="file1">
+    </p>
+    <p>
+        <input type="submit" value="Upload">
     </p>
 </form>
 
