@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>External JS</title>
+</head>
+<body>
+    <script>
+
+    (function() {
+        var name = 'Brett'; 
+        console.log("Hello from " + name);
+    })();
+
+
+    (function() {
+        var random = Math.floor((Math.random()*100)+1);
+        var message = (random % 2 == 0) ? "The number is Even" : "The number is odd";
+        console.log("The number is " + random);
+        console.log(message);
+    })();
+
+    </script>
+</body>
+</html>

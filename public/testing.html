@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>Testing</title>
+</head>
+<body>
+    <script>
+var testing = 'testing a var';
+    
+    function test() {
+        testing = 'this is a new var';
+        console.log(testing);
+    }
+
+    test();
+
+    (function (){
+        var anothertest = 'this is a self inclosed function';
+        console.log(anothertest);
+    }());
+
+
+    // declare a function that will be invoked immediately
+// notice the parens surrounding the function. these are necessary
+(function () {
+    // variables and functions in here are only accessible inside this function's scope
+    var iffeVar = "I'm local to the IIFE.";
+    console.log(iffeVar);
+}());
+// also notice the double parens after the closing curly brace. these invoke the function.
+
+alert(iffeVar); // undefined
+
+    </script>
+</body>
+</html>
