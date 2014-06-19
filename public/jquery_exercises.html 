@@ -1,0 +1,15 @@
+<html>
+<head>
+    <title>Exampe jQuery Page</title>
+    <script src="/js/jquery.js"></script>
+    <script>
+        $('document').ready(function() {
+            var contents = $('#codeup').html();
+            alert(contents);
+        });
+    </script>
+</head>
+<body>
+    <h1 id="codeup">Hello Codeup</h1>
+</body>
+</html>

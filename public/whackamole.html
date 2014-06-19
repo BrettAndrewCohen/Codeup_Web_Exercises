@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>Whack A Mole</title>
+    <link rel="stylesheet" href="/css/whackamole.css">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script>
+
+    $('document').ready(function() {
+        $('.inner-box').hide();
+			var count = 0;
+			var max = 100;
+			var interval = 2000; // interval time in milliseconds
+
+			var intervalId = setInterval(function () {
+			    if (count >= max) {
+			        clearInterval(intervalId);
+			        console.log('All done');
+			    } else {
+			        count++;
+			        var random = Math.floor(Math.random() * $('.inner-box').length);
+					$('.inner-box').hide().eq(random).show();
+
+					// $('.inner-box').click(function() {
+			  //               alert('inner box was clicked');
+			  //           });
+			    }
+			}, interval);
+
+    });
+
+
+    </script>
+</head>
+<body>
+<div id="top">
+	<h1 id="test">Whack A Mole</h1>
+	<p>Click the image to gain points.</p>
+	<p id="score">Score:</p>
+</div>
+    <div id="boxes"> 
+
+	    <div class="box" id="top-left">
+	    	<div class ="inner-box">Top Left</div>
+	   	</div>
+
+	    <div class="box" id="top-center">
+	    	<div class ="inner-box">Top Center</div>
+	    </div>
+
+	    <div class="box" id="top-right">
+	    	<div class ="inner-box">Top Right</div>
+	    </div>
+
+	    <div class="box" id="middle-left">
+	    	<div class ="inner-box">Middle Left</div>
+	    </div>
+	    
+	    <div class="box" id="middle-center">
+	    	<div class ="inner-box">Middle Center</div>
+	    </div>
+
+	    <div class="box" id="middle-right">
+	    	<div class ="inner-box">Middle Right</div>
+	    </div>
+
+	   	<div class="box" id="bottom-left">
+	   		<div class ="inner-box">Bottom Left</div>
+	   	</div>
+	    
+	    <div class="box" id="bottom-center">
+	    	<div class ="inner-box">Bottom Middle</div>
+	    </div>
+
+	    <div class="box" id="bottom-right">
+	    	<div class ="inner-box">Bottom Center</div>
+	    </div>
+	</div>
+</body>
+</html>

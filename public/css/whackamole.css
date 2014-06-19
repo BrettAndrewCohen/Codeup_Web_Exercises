@@ -1,0 +1,29 @@
+.box {
+
+	width: 100px;
+	height: 100px;
+	padding: 10px;
+	border: 1px solid black;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	color: black;
+	position: relative;	
+	float: left;
+}
+
+#middle-left {
+	clear: left;
+}
+
+#bottom-left {
+	clear: left;
+}
+
+.inner-box {
+
+	width: 80px;
+	height: 80px;
+	padding: 10px;
+	border: 1px solid red;
+	background-color: red;
+}
