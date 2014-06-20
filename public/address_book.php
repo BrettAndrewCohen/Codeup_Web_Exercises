@@ -4,15 +4,15 @@ require_once('classes/address_data_store.php');
 // $address_book = readcsv($filename);
 
 $ads = new AddressDataStore('address_book.csv');
-$address_book = $ads->read_csv();
-
+$address_book = $ads->read();
+var_dump($ads->is_csv);
 
 if (!empty($_POST)) {
     if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['city']) && !empty($_POST['state']) && !empty($_POST['zip'])) {
         $newEntry = array($_POST['name'],$_POST['address'],$_POST['city'],$_POST['state'],$_POST['zip']);
         // $address_book[] = $newEntry; same as below
         array_push($address_book, $newEntry);
-        $ads->write_csv($address_book);
+        $ads->write($address_book);
         // savefile('address_book.csv', $address_book);
     } else {
        echo "Please include all of the fields";
@@ -22,7 +22,7 @@ if (!empty($_POST)) {
 if (!empty($_GET)) {
     $removeindex = $_GET['removeitem'];
     unset($address_book[$removeindex]);
-    $ads->write_csv($address_book);
+    $ads->write($address_book);
     // savefile('address_book.csv', $address_book);
 }
 
@@ -39,9 +39,9 @@ if (count($_FILES) > 0 && $_FILES['file1']['error'] == 0) {
         move_uploaded_file($_FILES['file1']['tmp_name'], $saved_filename);
 
         $upload = new AddressDataStore($saved_filename);
-        $csvfile = $upload->read_csv();
+        $csvfile = $upload->read();
         $address_book = array_merge($address_book, $csvfile);
-        $ads->write_csv($address_book);
+        $ads->write($address_book);
 
     } else {
         echo "Not a valid file. Please use only a CSV file";

@@ -3,16 +3,38 @@
 class Filestore {
 
     public $filename = '';
+    public $is_csv = FALSE;
 
-    function __construct($filename = '') 
-    {
+
+    public function __construct($filename = '') {
         $this->filename = $filename;
+        if(substr($this->filename, -3) == "csv") {
+        $this->is_csv = TRUE;
+        }
+    }
+
+    public function read() {
+        if ($this->is_csv) {
+            return $this->read_csv();
+        }   
+        else {
+            return $this->read_lines();    
+        }
+    }
+
+    public function write($array) {
+        if ($this->is_csv) {
+            $this->write_csv($array);
+        }   
+        else {
+            $this->write_lines($array);
+        }
     }
 
     /**
      * Returns array of lines in $this->filename
      */
-    function read_lines() {
+    private function read_lines() {
         $contents = [];
         if (is_readable($this->filename) && filesize($this->filename) > 0){
             $handle = fopen($this->filename, 'r');
@@ -27,7 +49,7 @@ class Filestore {
     /**
      * Writes each element in $array to a new line in $this->filename
      */
-    function write_lines($array) {
+    private function write_lines($array) {
         if (is_writable($this->filename)) {
             $handle = fopen($this->filename, 'w');
             foreach($array as $items) {
@@ -40,7 +62,7 @@ class Filestore {
     /**
      * Reads contents of csv $this->filename, returns an array
      */
-    function read_csv(){
+    private function read_csv(){
         $contents = [];
         if (is_readable($this->filename) && filesize($this->filename) > 0){
             $handle = fopen($this->filename, 'r');
@@ -58,9 +80,9 @@ class Filestore {
     /**
      * Writes contents of $array to csv $this->filename
      */
-    function write_csv($addresses_array) {
+    private function write_csv($array) {
         $handle = fopen($this->filename, 'w');
-        foreach ($addresses_array as $row) {
+        foreach ($array as $row) {
             fputcsv($handle, $row);
         }
         fclose($handle); 
