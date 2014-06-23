@@ -5,20 +5,38 @@ require_once('classes/address_data_store.php');
 
 $ads = new AddressDataStore('address_book.csv');
 $address_book = $ads->read();
-var_dump($ads->is_csv);
+class InvalidInputException extends Exception { }
 
-if (!empty($_POST)) {
-    if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['city']) && !empty($_POST['state']) && !empty($_POST['zip'])) {
-        $newEntry = array($_POST['name'],$_POST['address'],$_POST['city'],$_POST['state'],$_POST['zip']);
-        // $address_book[] = $newEntry; same as below
-        array_push($address_book, $newEntry);
-        $ads->write($address_book);
-        // savefile('address_book.csv', $address_book);
-    } else {
-       echo "Please include all of the fields";
+try {
+    if (!empty($_POST)) {
+        if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['city']) && !empty($_POST['state']) && !empty($_POST['zip'])) {
+            if(strlen($_POST['name']) > 125) {
+                throw new InvalidInputException('Your name is too long!');
+            }
+            if(strlen($_POST['address']) > 125) {
+                throw new InvalidInputException('Your address is too long!');
+            }
+            if(strlen($_POST['city']) > 125) {
+                throw new InvalidInputException('Your city name is too long!');
+            }
+            if(strlen($_POST['state']) > 125) {
+                throw new InvalidInputException('Your state name is too long!');
+            }
+            if(strlen($_POST['zip']) > 125) {
+                throw new InvalidInputException('Your zip is too long!');
+            }
+            $newEntry = array($_POST['name'],$_POST['address'],$_POST['city'],$_POST['state'],$_POST['zip']);
+            // $address_book[] = $newEntry; same as below
+            array_push($address_book, $newEntry);
+            $ads->write($address_book);
+            // savefile('address_book.csv', $address_book);
+        } else {
+           echo "Please include all of the fields";
+        }
     }
+} catch(InvalidInputException $e) {
+    $msg = $e->getMessage() . PHP_EOL;
 }
-
 if (!empty($_GET)) {
     $removeindex = $_GET['removeitem'];
     unset($address_book[$removeindex]);
@@ -56,6 +74,9 @@ if (count($_FILES) > 0 && $_FILES['file1']['error'] == 0) {
     <title>Address Book Entries</title>
 </head>
 <body>
+<? if (isset($msg)) : ?>  
+    <?= "<p>{$msg}</p>";?>
+<? endif; ?>
 <h1>Address Book</h1>
 <table border="1" style="width:700px">
     <tr>
