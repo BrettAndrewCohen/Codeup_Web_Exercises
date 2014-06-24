@@ -46,10 +46,10 @@ $parks = $dbc->query("SELECT * FROM national_parks LIMIT $limit OFFSET $offset")
 <? if ($pagePrev > 0) : ?> 
 <li class="previous"><?= "<a href='?page=$pagePrev'>Previous</a>";?></li>
 <? endif ?> 
-<? if ($rowCount->rowCount() > ($offset + $limit)) : ?> 
+<? if ($rowCount->rowCount() > ($offset + $limit)) : ?>     
  <li class="next"><?= "<a href='?page=$pageNext'>Next</a>";?></li>
 <? endif ?>
 </ul>
-</div>
+
 </body>
-<html>
+</html>
